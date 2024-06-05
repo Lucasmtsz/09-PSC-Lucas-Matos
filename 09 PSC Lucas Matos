@@ -1,0 +1,362 @@
+import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
+
+abstract class PersonagemDragonBall {
+    private String nome;
+    private int idade;
+    private String genero;
+    private String temporada;
+    private int ki;
+    private String poderEspecial;
+
+    public PersonagemDragonBall(String nome, int idade, String genero, String temporada, int ki, String poderEspecial) {
+        this.nome = nome;
+        this.idade = idade;
+        this.genero = genero;
+        this.temporada = temporada;
+        this.ki = ki;
+        this.poderEspecial = poderEspecial;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public String getTemporada() {
+        return temporada;
+    }
+
+    public void setTemporada(String temporada) {
+        this.temporada = temporada;
+    }
+
+    public int getKi() {
+        return ki;
+    }
+
+    public void setKi(int ki) {
+        this.ki = ki;
+    }
+
+    public String getPoderEspecial() {
+        return poderEspecial;
+    }
+
+    public void setPoderEspecial(String poderEspecial) {
+        this.poderEspecial = poderEspecial;
+    }
+
+    public abstract int calcularPoder();
+
+    @Override
+    public String toString() {
+        return "Nome: " + nome + ", Idade: " + idade + ", Gênero: " + genero + ", Temporada: " + temporada + 
+               ", Ki: " + ki + ", Poder Especial: " + poderEspecial + ", Poder Total: " + calcularPoder();
+    }
+}
+
+interface Transformavel {
+    void transformar(int nivel);
+}
+
+class Goku extends PersonagemDragonBall implements Transformavel {
+    public Goku(int idade, String genero, String temporada, int ki, String poderEspecial) {
+        super("Goku", idade, genero, temporada, ki, poderEspecial);
+    }
+
+    @Override
+    public int calcularPoder() {
+        return getKi() * 100;
+    }
+
+    @Override
+    public void transformar(int nivel) {
+        if (nivel >= 1 && nivel <= 5) {
+            setKi(getKi() * nivel);
+            System.out.println(getNome() + " se transformou em Super Sayajin nível " + nivel + "! Novo Ki: " + getKi());
+        } else {
+            System.out.println(getNome() + " não pode se transformar nesse nível.");
+        }
+    }
+}
+
+class Sayajin extends PersonagemDragonBall implements Transformavel {
+    private int nivelMaximoSSJ;
+    private boolean temRabo;
+
+    public Sayajin(String nome, int idade, String genero, String temporada, int ki, String poderEspecial, int nivelMaximoSSJ, boolean temRabo) {
+        super(nome, idade, genero, temporada, ki, poderEspecial);
+        this.nivelMaximoSSJ = nivelMaximoSSJ;
+        this.temRabo = temRabo;
+    }
+
+    public int getNivelMaximoSSJ() {
+        return nivelMaximoSSJ;
+    }
+
+    public void setNivelMaximoSSJ(int nivelMaximoSSJ) {
+        this.nivelMaximoSSJ = nivelMaximoSSJ;
+    }
+
+    public boolean isTemRabo() {
+        return temRabo;
+    }
+
+    public void setTemRabo(boolean temRabo) {
+        this.temRabo = temRabo;
+    }
+
+    @Override
+    public int calcularPoder() {
+        return (int) (getKi() * (nivelMaximoSSJ * 0.1));
+    }
+
+    @Override
+    public void transformar(int nivel) {
+        if ((nivel >= 1 && nivel <= 3) || ((nivel == 4 || nivel == 5) && (getNome().equals("Goku") || getNome().equals("Vegeta")))) {
+            System.out.println(getNome() + " se transformou em Super Sayajin nível " + nivel);
+        } else {
+            System.out.println("Não foi possível transformar esse Sayajin.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Nível Máximo SSJ: " + nivelMaximoSSJ + ", Tem Rabo: " + temRabo;
+    }
+}
+
+class Gohan extends Sayajin {
+    public Gohan(int idade, String genero, String temporada, int ki, String poderEspecial, int nivelMaximoSSJ, boolean temRabo) {
+        super("Gohan", idade, genero, temporada, ki, poderEspecial, nivelMaximoSSJ, temRabo);
+    }
+
+    @Override
+    public void transformar(int nivel) {
+        if (nivel == 5 && getNivelMaximoSSJ() < 5) {
+            System.out.println(getNome() + " não pode se transformar no nível 5.");
+            super.transformar(3);
+        } else {
+            super.transformar(nivel);
+        }
+    }
+}
+
+class Namekuseijin extends PersonagemDragonBall {
+    private int quantidadeEsferas;
+    private boolean podeCurar;
+
+    public Namekuseijin(String nome, int idade, String genero, String temporada, int ki, String poderEspecial, int quantidadeEsferas, boolean podeCurar) {
+        super(nome, idade, genero, temporada, ki, poderEspecial);
+        this.quantidadeEsferas = quantidadeEsferas;
+        this.podeCurar = podeCurar;
+    }
+
+    public int getQuantidadeEsferas() {
+        return quantidadeEsferas;
+    }
+
+    public void setQuantidadeEsferas(int quantidadeEsferas) {
+        this.quantidadeEsferas = quantidadeEsferas;
+    }
+
+    public boolean isPodeCurar() {
+        return podeCurar;
+    }
+
+    public void setPodeCurar(boolean podeCurar) {
+        this.podeCurar = podeCurar;
+    }
+
+    @Override
+    public int calcularPoder() {
+        return (int) (getKi() * (1 + (podeCurar ? 0.2 : 0)));
+    }
+
+    public String fazerDesejo(String desejo) {
+        Map<String, String> traducao = new HashMap<>();
+        traducao.put("paz", "naku");
+        traducao.put("força", "kiru");
+        traducao.put("saúde", "medzu");
+        traducao.put("riqueza", "belu");
+        traducao.put("felicidade", "sumi");
+
+        String[] palavras = desejo.split(" ");
+        StringBuilder desejoNamekusei = new StringBuilder();
+        for (String palavra : palavras) {
+            desejoNamekusei.append(traducao.getOrDefault(palavra, palavra)).append(" ");
+        }
+        return desejoNamekusei.toString().trim();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Quantidade de Esferas: " + quantidadeEsferas + ", Pode Curar: " + podeCurar;
+    }
+}
+
+class Terraqueo extends PersonagemDragonBall {
+    private String pais;
+    private String cidade;
+
+    public Terraqueo(String nome, int idade, String genero, String temporada, int ki, String poderEspecial, String pais, String cidade) {
+        super(nome, idade, genero, temporada, ki, poderEspecial);
+        this.pais = pais;
+        this.cidade = cidade;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    @Override
+    public int calcularPoder() {
+        return getKi();
+    }
+
+    @Override
+    public String toString() {
+        return "Nome: " + getNome() + ", Idade: " + getIdade() + ", Gênero: " + getGenero() + ", Temporada: " + getTemporada() + 
+               ", Ki: " + getKi() + ", Poder Especial: " + getPoderEspecial() + ", País: " + pais + ", Cidade: " + cidade + 
+               ", Poder Total: " + calcularPoder();
+    }
+}
+
+class FabricaDePersonagens {
+    public static Goku criarGoku(int idade, String genero, String temporada, int ki, String poderEspecial) {
+        return new Goku(idade, genero, temporada, ki, poderEspecial);
+    }
+
+    public static Gohan criarGohan(int idade, String genero, String temporada, int ki, String poderEspecial, int nivelMaximoSSJ, boolean temRabo) {
+        return new Gohan(idade, genero, temporada, ki, poderEspecial, nivelMaximoSSJ, temRabo);
+    }
+
+    public static Terraqueo criarKuririn(int idade, String genero, String temporada, int ki, String poderEspecial, String pais, String cidade) {
+        return new Terraqueo("Kuririn", idade, genero, temporada, ki, poderEspecial, pais, cidade);
+    }
+
+    public static Namekuseijin criarDende(int idade, String genero, String temporada, int ki, String poderEspecial, int quantidadeEsferas, boolean podeCurar) {
+        return new Namekuseijin("Dendê", idade, genero, temporada, ki, poderEspecial, quantidadeEsferas, podeCurar);
+    }
+}
+
+public class Principal {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Digite as informações para Goku:");
+        System.out.print("Idade: ");
+        int idadeGoku = scanner.nextInt();
+        scanner.nextLine();  
+        System.out.print("Gênero: ");
+        String generoGoku = scanner.nextLine();
+        System.out.print("Temporada: ");
+        String temporadaGoku = scanner.nextLine();
+        System.out.print("Ki: ");
+        int kiGoku = scanner.nextInt();
+        scanner.nextLine();  
+        System.out.print("Poder Especial: ");
+        String poderEspecialGoku = scanner.nextLine();
+        Goku goku = FabricaDePersonagens.criarGoku(idadeGoku, generoGoku, temporadaGoku, kiGoku, poderEspecialGoku);
+        System.out.println(goku);
+        goku.transformar(5);
+
+        System.out.println("\nDigite as informações para Gohan:");
+        System.out.print("Idade: ");
+        int idadeGohan = scanner.nextInt();
+        scanner.nextLine();  
+        System.out.print("Gênero: ");
+        String generoGohan = scanner.nextLine();
+        System.out.print("Temporada: ");
+        String temporadaGohan = scanner.nextLine();
+        System.out.print("Ki: ");
+        int kiGohan = scanner.nextInt();
+        scanner.nextLine(); 
+        System.out.print("Poder Especial: ");
+        String poderEspecialGohan = scanner.nextLine();
+        Gohan gohan = FabricaDePersonagens.criarGohan(idadeGohan, generoGohan, temporadaGohan, kiGohan, poderEspecialGohan, 3, true);
+        System.out.println(gohan);
+        try {
+            gohan.transformar(5);  
+        } catch (Exception e) {
+            gohan.transformar(3); 
+        }
+
+        System.out.println("\nDigite as informações para Kuririn:");
+        System.out.print("Idade: ");
+        int idadeKuririn = scanner.nextInt();
+        scanner.nextLine();  
+        System.out.print("Gênero: ");
+        String generoKuririn = scanner.nextLine();
+        System.out.print("Temporada: ");
+        String temporadaKuririn = scanner.nextLine();
+        System.out.print("Ki: ");
+        int kiKuririn = scanner.nextInt();
+        scanner.nextLine();  
+        System.out.print("Poder Especial: ");
+        String poderEspecialKuririn = scanner.nextLine();
+        System.out.print("País: ");
+        String paisKuririn = scanner.nextLine();
+        System.out.print("Cidade: ");
+        String cidadeKuririn = scanner.nextLine();
+        Terraqueo kuririn = FabricaDePersonagens.criarKuririn(idadeKuririn, generoKuririn, temporadaKuririn, kiKuririn, poderEspecialKuririn, paisKuririn, cidadeKuririn);
+        System.out.println(kuririn);
+
+        System.out.println("\nDigite as informações para Dendê:");
+        System.out.print("Idade: ");
+        int idadeDende = scanner.nextInt();
+        scanner.nextLine();  
+        System.out.print("Gênero: ");
+        String generoDende = scanner.nextLine();
+        System.out.print("Temporada: ");
+        String temporadaDende = scanner.nextLine();
+        System.out.print("Ki: ");
+        int kiDende = scanner.nextInt();
+        scanner.nextLine();  
+        System.out.print("Poder Especial: ");
+        String poderEspecialDende = scanner.nextLine();
+        System.out.print("Quantidade de Esferas: ");
+        int quantidadeEsferas = scanner.nextInt();
+        System.out.print("Pode Curar (true/false): ");
+        boolean podeCurar = scanner.nextBoolean();
+        Namekuseijin dende = FabricaDePersonagens.criarDende(idadeDende, generoDende, temporadaDende, kiDende, poderEspecialDende, quantidadeEsferas, podeCurar);
+        System.out.println(dende);
+        scanner.nextLine();  
+        System.out.print("Digite um desejo: ");
+        String desejo = scanner.nextLine();
+        System.out.println("Desejo em Namekusei: " + dende.fazerDesejo(desejo));
+    }
+}
